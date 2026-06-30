@@ -9,3 +9,82 @@ datasource db {
   directUrl = env("DIRECT_URL")
   schemas   = ["user", "topic", "media", "chat"]
 }
+
+// ─── user schema ──────────────────────────────────────────────
+
+model Account {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  username     String   @unique
+  avatarUrl    String?  @map("avatar_url")
+  tier         String   @default("free") // 'free' | 'paid'
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  follows    TopicFollow[]
+  photos     Photo[]
+  photoLikes PhotoLike[]
+
+  @@map("accounts")
+  @@schema("user")
+}
+
+// ─── topic schema ─────────────────────────────────────────────
+
+model Topic {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  slug          String   @unique
+  coverImageUrl String?  @map("cover_image_url")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  follows TopicFollow[]
+  photos  Photo[]
+
+  @@map("topics")
+  @@schema("topic")
+}
+
+model TopicFollow {
+  userId     String   @map("user_id") @db.Uuid
+  topicId    String   @map("topic_id") @db.Uuid
+  followedAt DateTime @default(now()) @map("followed_at")
+
+  user  Account @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic Topic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([userId, topicId])
+  @@map("follows")
+  @@schema("topic")
+}
+
+// ─── media schema ─────────────────────────────────────────────
+
+model Photo {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  topicId    String   @map("topic_id") @db.Uuid
+  uploadedBy String   @map("uploaded_by") @db.Uuid
+  imageUrl   String   @map("image_url")
+  caption    String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  topic    Topic       @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  uploader Account     @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+  likes    PhotoLike[]
+
+  @@map("photos")
+  @@schema("media")
+}
+
+model PhotoLike {
+  userId  String   @map("user_id") @db.Uuid
+  photoId String   @map("photo_id") @db.Uuid
+  likedAt DateTime @default(now()) @map("liked_at")
+
+  user  Account @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photo Photo   @relation(fields: [photoId], references: [id], onDelete: Cascade)
+
+  @@id([userId, photoId])
+  @@map("photo_likes")
+  @@schema("media")
+}
