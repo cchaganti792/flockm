@@ -16,14 +16,14 @@
 
 ---
 
-## Plan 2 — NestJS Backend ⬜
+## Plan 2 — NestJS Backend ✅
 
 Build modules in this order — each depends on the previous:
 
-- ⬜ `auth` module — `POST /auth/register`, `POST /auth/login`, JWT
-- ⬜ `users` module — `GET /users/me` (protected route)
-- ⬜ `topics` module — `GET /topics`, `GET /topics/:slug`, `POST /topics/:slug/follow`, `DELETE /topics/:slug/follow`
-- ⬜ `media` module — `GET /topics/:slug/photos`, `GET /photos/:id`, `POST /photos/:id/like`, `DELETE /photos/:id/like`
+- ✅ `auth` module — `POST /auth/register`, `POST /auth/login`, JWT
+- ✅ `users` module — `GET /users/me` (protected route)
+- ✅ `topics` module — `GET /topics`, `GET /topics/:slug`, `POST /topics/:slug/follow`, `DELETE /topics/:slug/follow`
+- ✅ `media` module — `GET /topics/:slug/photos`, `GET /photos/:id`, `POST /photos/:id/like`, `DELETE /photos/:id/like`
 
 ---
 
