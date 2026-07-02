@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Delete, Param, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { JwtAuthGuard } from '../../shared/auth/jwt.guard';
 import { CurrentUser } from '../../shared/auth/current-user.decorator';
-import { AuthenticatedUser } from '../../shared/auth/jwt.strategy';
+import type { AuthenticatedUser } from '../../shared/auth/jwt.strategy';
 import { TopicsService } from './topics.service';
 
 @Controller('topics')
